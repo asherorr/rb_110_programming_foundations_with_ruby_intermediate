@@ -27,9 +27,12 @@ hsh = {
 #if type is vegetable, upcase values associated with the size key
 
 #Code
-p (hsh.map do |element|
-    element.select do |
-    uppercased_colors = value[:colors][0].capitalize
-    upcased_sizes = value[:size].upcase
+p (hsh.map do |key, value|
+    if hsh[key][:type] == 'fruit'
+      hsh[key][:colors].map {|color| color.capitalize}
+      
+    elsif hsh[key][:type] == 'vegetable'
+      hsh[key][:size].upcase
+    end
 end)
   
