@@ -84,27 +84,44 @@ def detect_winner(brd)
   nil
 end
 
+
+
+computer_score = 0
+player_score = 0
+
+#outer loop
 loop do
-  board = initialize_board
-
-  loop do
+  #initiate while loop
+  while computer_score < 5 || player_score < 5
+    board = initialize_board
+    
+    #play the game until someone wins
+    loop do
+      display_board(board)
+  
+      player_places_piece(board)
+      break if someone_won?(board) || board_full?(board)
+  
+      computer_places_piece(board)
+      break if someone_won?(board) || board_full?(board)
+    end
+  
+    #show the board again
     display_board(board)
-
-    player_places_piece(board)
-    break if someone_won?(board) || board_full?(board)
-
-    computer_places_piece(board)
-    break if someone_won?(board) || board_full?(board)
+    
+    #if someone wins, show prompts and update the score.
+    if someone_won?(board)
+      prompt "#{detect_winner(board)} won!"
+      computer_score += 1 if detect_winner(board) == "Computer"
+      player_score += 1 if detect_winner(board) == "Player"
+      break if computer_score == 5 or player_score == 5
+    else
+      prompt "It's a tie!"
+    end
   end
 
-  display_board(board)
-
-  if someone_won?(board)
-    prompt "#{detect_winner(board)} won!"
-  else
-    prompt "It's a tie!"
-  end
-
+  computer_score = 0
+  player_score = 0
   prompt "Play again? (y or n)"
   answer = gets.chomp
   break unless answer.downcase.start_with?('y')
