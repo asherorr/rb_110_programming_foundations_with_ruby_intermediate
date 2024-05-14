@@ -83,6 +83,12 @@ def computer_places_piece(brd)
     end
   end
   
+  #pick square #5
+  if !square
+    square = 5
+  end
+  
+  #pick random square
   if !square
     square = empty_squares(brd).sample
   end
