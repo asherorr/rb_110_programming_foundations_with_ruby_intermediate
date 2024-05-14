@@ -67,7 +67,6 @@ def find_at_risk_square(line, board)
   end
 end
 
-
 def computer_places_piece(brd)
   square = nil
   WINNING_LINES.each do |line|
