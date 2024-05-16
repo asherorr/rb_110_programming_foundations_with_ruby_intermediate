@@ -115,18 +115,32 @@ def detect_winner(brd)
   nil
 end
 
+def select_who_goes_first
+  loop do
+    prompt "Who goes first? Computer or Player?"
+    response = gets.chomp
+    if response != "Computer" && response != "Player"
+      puts "That is not a valid option. Try again."
+    else
+      break
+    end
+  response
+  end
+end
 
-
-computer_score = 0
-player_score = 0
-
-#outer loop
-loop do
-  #initiate while loop
-  while computer_score < 5 || player_score < 5
-    board = initialize_board
+def play_until_someone_wins(board, first_player)
+  if first_player == "Computer"
+    loop do
+      display_board(board)
+  
+      computer_places_piece(board)
+      break if someone_won?(board) || board_full?(board)
+  
+      player_places_piece(board)
+      break if someone_won?(board) || board_full?(board)
+    end
     
-    #play the game until someone wins
+  else
     loop do
       display_board(board)
   
@@ -136,24 +150,32 @@ loop do
       computer_places_piece(board)
       break if someone_won?(board) || board_full?(board)
     end
-  
-    #show the board again
+  end
+end
+
+computer_score = 0
+player_score = 0
+
+loop do
+  while computer_score < 5 || player_score < 5
+    board = initialize_board
+    player = select_who_goes_first
+    play_until_someone_wins(board, player)
     display_board(board)
     
-    #if someone wins, show prompts and update the score.
+    # if someone wins, show prompts and update the score.
     if someone_won?(board)
       prompt "#{detect_winner(board)} won!"
       computer_score += 1 if detect_winner(board) == "Computer"
       player_score += 1 if detect_winner(board) == "Player"
-      break if computer_score == 5 or player_score == 5
+      break if computer_score == 5 || player_score == 5
     else
       prompt "It's a tie!"
     end
   end
-
-  computer_score = 0
-  player_score = 0
-  prompt "Play again? (y or n)"
+  
+  
+  prompt "One of the players has reached 5 wins. Play again? (y or n)"
   answer = gets.chomp
   break unless answer.downcase.start_with?('y')
 end
