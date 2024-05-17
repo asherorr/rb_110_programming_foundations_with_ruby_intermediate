@@ -83,14 +83,13 @@ def computer_places_piece(brd)
     end
   end
   
-  #pick square #5
+  #pick square #5 or random square
   if !square
-    square = 5
-  end
-  
-  #pick random square
-  if !square
-    square = empty_squares(brd).sample
+    if brd[5] == INITIAL_MARKER
+      square = 5
+    else
+      square = empty_squares(brd).sample
+    end
   end
   
   brd[square] = COMPUTER_MARKER
