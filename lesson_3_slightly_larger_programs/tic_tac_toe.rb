@@ -116,6 +116,7 @@ def detect_winner(brd)
 end
 
 def select_who_goes_first
+  response = ""
   loop do
     prompt "Who goes first? Computer or Player?"
     response = gets.chomp
@@ -124,17 +125,17 @@ def select_who_goes_first
     else
       break
     end
-  response
   end
+  response
 end
 
 def play_until_someone_wins(board, first_player)
   if first_player == "Computer"
     loop do
-      display_board(board)
   
       computer_places_piece(board)
       break if someone_won?(board) || board_full?(board)
+      display_board(board)
   
       player_places_piece(board)
       break if someone_won?(board) || board_full?(board)
