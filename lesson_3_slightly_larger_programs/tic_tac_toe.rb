@@ -114,16 +114,50 @@ def detect_winner(brd)
   nil
 end
 
-def select_who_goes_first
+def select_who_chooses_who_goes_first
   response = ""
   loop do
-    prompt "Who goes first? Computer or Player?"
+    prompt "Who picks who goes first? Player or Computer?"
     response = gets.chomp
     if response != "Computer" && response != "Player"
       puts "That is not a valid option. Try again."
     else
       break
     end
+  end
+  response
+end
+
+def display_who_will_choose(player_who_chooses_first)
+  if player_who_chooses_first == "Computer"
+    prompt "The Computer will decide who makes the first move."
+  else
+    prompt "The Player will decide who makes the first move."
+  end
+end
+
+
+def select_who_goes_first(selection)
+  response = ""
+  if selection == "Player"
+    loop do
+      prompt "Select who goes first: Player or Computer"
+      response = gets.chomp
+      if response != "Computer" && response != "Player"
+        puts "That is not a valid option. Try again."
+      else
+        break
+      end
+    end
+  elsif selection == "Computer"
+    prompt "The computer is choosing who goes first now."
+    sleep 1
+    prompt "--- Selecting ---"
+    sleep 1.5
+    options = ["Player", "Computer"]
+    selected_option = options.sample
+    prompt "The computer chose #{selected_option}."
+    response = selected_option
   end
   response
 end
@@ -156,11 +190,19 @@ end
 computer_score = 0
 player_score = 0
 
+# loop do
+  # first_to_choose = select_who_chooses_who_goes_first
+  # display_who_will_choose(first_to_choose)
+  # first_to_make_a_move = select_who_goes_first(first_to_choose)
+  
 loop do
+  first_to_choose = select_who_chooses_who_goes_first
+  display_who_will_choose(first_to_choose)
+  first_to_make_a_move = select_who_goes_first(first_to_choose)
   while computer_score < 5 || player_score < 5
     board = initialize_board
-    player = select_who_goes_first
-    play_until_someone_wins(board, player)
+    # player = select_who_goes_first
+    play_until_someone_wins(board, first_to_make_a_move)
     display_board(board)
     
     # if someone wins, show prompts and update the score.
@@ -178,6 +220,8 @@ loop do
   prompt "One of the players has reached 5 wins. Play again? (y or n)"
   answer = gets.chomp
   break unless answer.downcase.start_with?('y')
+  computer_score = 0
+  player_score = 0
 end
 
 prompt "Thanks for playing Tic Tac Toe! Good bye!"
