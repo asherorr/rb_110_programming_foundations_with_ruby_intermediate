@@ -162,46 +162,41 @@ def select_who_goes_first(selection)
   response
 end
 
-def play_until_someone_wins(board, first_player)
-  if first_player == "Computer"
-    loop do
-  
-      computer_places_piece(board)
-      break if someone_won?(board) || board_full?(board)
-      display_board(board)
-  
-      player_places_piece(board)
-      break if someone_won?(board) || board_full?(board)
-    end
-    
-  else
-    loop do
-      display_board(board)
-  
-      player_places_piece(board)
-      break if someone_won?(board) || board_full?(board)
-  
-      computer_places_piece(board)
-      break if someone_won?(board) || board_full?(board)
-    end
+def alternate_player(current_player)
+  if current_player == "Computer"
+    "Player"
+  else "Computer"
+  end
+end
+
+def place_piece(board, current_player)
+  if current_player == "Computer"
+    computer_places_piece(board)
+  elsif current_player == "Player"
+    player_places_piece(board)
+  current_player
+  end
+end
+
+def play_until_someone_wins(board, player)
+  loop do
+    place_piece(board, player)
+    player = alternate_player(player)
+    display_board(board)
+    break if someone_won?(board) || board_full?(board)
   end
 end
 
 computer_score = 0
 player_score = 0
 
-# loop do
-  # first_to_choose = select_who_chooses_who_goes_first
-  # display_who_will_choose(first_to_choose)
-  # first_to_make_a_move = select_who_goes_first(first_to_choose)
-  
 loop do
   first_to_choose = select_who_chooses_who_goes_first
   display_who_will_choose(first_to_choose)
   first_to_make_a_move = select_who_goes_first(first_to_choose)
+  
   while computer_score < 5 || player_score < 5
     board = initialize_board
-    # player = select_who_goes_first
     play_until_someone_wins(board, first_to_make_a_move)
     display_board(board)
     
