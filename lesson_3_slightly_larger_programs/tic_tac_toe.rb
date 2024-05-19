@@ -197,8 +197,8 @@ loop do
   
   while computer_score < 5 || player_score < 5
     board = initialize_board
-    play_until_someone_wins(board, first_to_make_a_move)
     display_board(board)
+    play_until_someone_wins(board, first_to_make_a_move)
     
     # if someone wins, show prompts and update the score.
     if someone_won?(board)
