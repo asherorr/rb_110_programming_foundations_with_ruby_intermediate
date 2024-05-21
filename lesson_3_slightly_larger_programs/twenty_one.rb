@@ -46,6 +46,35 @@ def see_cards(player_hand, dealer_hand)
   puts "Player's cards: #{joiner(player_hand)}"
 end
 
+def find_card_values(hand)
+  card_values = []
+  
+  hand.each do |str_obj|
+    split_obj = str_obj.split(" ")
+    card_values << split_obj[0]
+  end
+end
+
+def is_num(card)
+  true if Float(card) rescue false
+end
+
+def convert_card_values_to_int(hand)
+  face_cards = ["Jack", "Queen", "King"]
+  card_values_as_ints = []
+  
+  hand.each do |card|
+    card_values_as_ints << 10 if face_cards.include?(card)
+    card_values_as_ints << 11 if card == "Ace"
+    card_values_as_ints << card.to_i if is_num(card)
+  end
+end
+  
+
+def calculate_hand_value(hand)
+end
+
+
 def choose_to_hit_or_stay(player)
 end
 
@@ -56,9 +85,6 @@ def stay
 end
 
 def determine_ace_value
-end
-
-def calculate_hand_value
 end
 
 def compare_cards
@@ -74,3 +100,6 @@ deck = initialize_deck
 player_cards = deal_cards!(deck)
 dealer_cards = deal_cards!(deck)
 see_cards(player_cards, dealer_cards)
+
+player_cards = find_card_values(player_cards)
+player_cards = convert_card_values_to_int(player_cards)
