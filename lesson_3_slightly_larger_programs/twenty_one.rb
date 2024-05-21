@@ -21,7 +21,19 @@ def initialize_deck
   deck
 end
 
-def deal_2_cards_at_start_of_game(deck)
+def deal_cards!(deck)
+  player_cards = []
+  
+  loop do
+    break if deck.empty? || player_cards.size == 2
+    
+    card = deck.sample
+    card_index = deck.index(card)
+    player_cards << card
+    deck.delete_at(card_index)
+  end
+  
+  player_cards
 end
 
 def see_dealer_cards(hand)
@@ -53,3 +65,7 @@ end
 
 def closing_message
 end
+
+deck = initialize_deck
+player_cards = deal_cards!(deck)
+dealer_cards = deal_cards!(deck)
