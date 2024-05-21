@@ -36,10 +36,14 @@ def deal_cards!(deck)
   player_cards
 end
 
-def see_dealer_cards(hand)
+def joiner(array_obj, delimeter= ", ", word= "||")
+  array_obj[0].to_s + " #{word} " + array_obj[1].to_s
 end
 
-def see_player_cards(hand)
+def see_cards(player_hand, dealer_hand)
+  puts "Dealer's cards: #{joiner(dealer_hand)}"
+  puts "--"
+  puts "Player's cards: #{joiner(player_hand)}"
 end
 
 def choose_to_hit_or_stay(player)
@@ -69,3 +73,4 @@ end
 deck = initialize_deck
 player_cards = deal_cards!(deck)
 dealer_cards = deal_cards!(deck)
+see_cards(player_cards, dealer_cards)
