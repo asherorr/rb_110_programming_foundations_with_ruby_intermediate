@@ -53,6 +53,8 @@ def find_card_values(hand)
     split_obj = str_obj.split(" ")
     card_values << split_obj[0]
   end
+  
+  card_values
 end
 
 def is_num(card)
@@ -65,29 +67,48 @@ def convert_card_values_to_int(hand)
   
   hand.each do |card|
     card_values_as_ints << 10 if face_cards.include?(card)
-    card_values_as_ints << 11 if card == "Ace"
+    card_values_as_ints << 11 if card == "Ace" && !hand.include?("Ace")
+    card_values_as_ints << 1 if card == "Ace" && hand.include?("Ace")
     card_values_as_ints << card.to_i if is_num(card)
   end
-end
   
+  card_values_as_ints
+end
 
 def calculate_hand_value(hand)
+  hand.sum
 end
 
-
-def choose_to_hit_or_stay(player)
+def prompt(msg)
+  puts "\n-> #{msg}"
 end
 
-def hit
+def choose_to_hit_or_stay
+  answer = ""
+  
+  loop do
+    valid_options = ["hit", "stay"]
+    prompt "Would you like to hit or stay?"
+    answer = gets.chomp.downcase
+    break if valid_options.include?(answer)
+    prompt "That is not a valid option. Try again."
+  end
+  
+  answer
+end
+
+def hit(deck, hand)
+  card = deck.sample
+  card_index = deck.index(card)
+  deck.delete_at(card_index)
+  hand.append(card)
 end
 
 def stay
+  pass
 end
 
-def determine_ace_value
-end
-
-def compare_cards
+def determine_winner(player_hand, dealer_hand)
 end
 
 def play_again
@@ -101,5 +122,6 @@ player_cards = deal_cards!(deck)
 dealer_cards = deal_cards!(deck)
 see_cards(player_cards, dealer_cards)
 
-player_cards = find_card_values(player_cards)
-player_cards = convert_card_values_to_int(player_cards)
+player_card_values = find_card_values(player_cards)
+player_cards_to_int = convert_card_values_to_int(player_card_values)
+player_hand_value = calculate_hand_value(player_cards_to_int)
