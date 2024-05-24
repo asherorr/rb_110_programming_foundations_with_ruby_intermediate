@@ -36,14 +36,16 @@ def deal_cards!(deck)
   player_cards
 end
 
-def joiner(array_obj, delimeter= ", ", word= "||")
-  array_obj[0].to_s + " #{word} " + array_obj[1].to_s
+def joiner(array_obj)
+  array_obj.map(&:to_s).join("\n")
 end
 
 def see_cards(player_hand, dealer_hand)
-  puts "Dealer's cards: #{joiner(dealer_hand)}"
+  puts "Dealer's cards:"
+  puts joiner(dealer_hand)
   puts "--"
-  puts "Player's cards: #{joiner(player_hand)}"
+  puts "Player's cards:"
+  puts joiner(player_hand)
 end
 
 def find_card_values(hand)
@@ -67,7 +69,7 @@ def convert_card_values_to_int(hand)
   
   hand.each do |card|
     card_values_as_ints << 10 if face_cards.include?(card)
-    card_values_as_ints << 11 if card == "Ace" && !hand.include?("Ace")
+    card_values_as_ints << 11 if card == "Ace" && !!hand.include?("Ace") == false
     card_values_as_ints << 1 if card == "Ace" && hand.include?("Ace")
     card_values_as_ints << card.to_i if is_num(card)
   end
@@ -97,15 +99,23 @@ def choose_to_hit_or_stay
   answer
 end
 
-def hit(deck, hand)
+def hit!(deck, hand)
   card = deck.sample
   card_index = deck.index(card)
   deck.delete_at(card_index)
   hand.append(card)
+  hand
 end
 
-def stay
-  pass
+def bust(hand_value)
+  busted = false
+  
+  if hand_value > 21
+    puts "You busted!" 
+    busted = true
+  end
+  
+  busted
 end
 
 def determine_winner(player_hand, dealer_hand)
@@ -121,6 +131,17 @@ deck = initialize_deck
 player_cards = deal_cards!(deck)
 dealer_cards = deal_cards!(deck)
 see_cards(player_cards, dealer_cards)
+
+loop do
+  decision = choose_to_hit_or_stay
+  if decision == "hit"
+    player_cards = hit!(deck, player_cards)
+    p player_cards
+    see_cards(player_cards, dealer_cards)
+  else
+    break
+  end
+end
 
 player_card_values = find_card_values(player_cards)
 player_cards_to_int = convert_card_values_to_int(player_card_values)
