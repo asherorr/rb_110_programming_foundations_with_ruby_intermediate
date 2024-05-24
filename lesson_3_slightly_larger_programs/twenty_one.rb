@@ -99,7 +99,6 @@ def choose_to_hit_or_stay
   
   loop do
     valid_options = ["hit", "stay"]
-    prompt "Would you like to hit or stay?"
     prompt "Hit or stay?"
     answer = gets.chomp.downcase
     break if valid_options.include?(answer)
