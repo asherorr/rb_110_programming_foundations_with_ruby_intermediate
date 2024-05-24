@@ -66,12 +66,21 @@ end
 def convert_card_values_to_int(hand)
   face_cards = ["Jack", "Queen", "King"]
   card_values_as_ints = []
+  ace_count = 0
   
   hand.each do |card|
-    card_values_as_ints << 10 if face_cards.include?(card)
-    card_values_as_ints << 11 if card == "Ace" && !!hand.include?("Ace") == false
-    card_values_as_ints << 1 if card == "Ace" && hand.include?("Ace")
-    card_values_as_ints << card.to_i if is_num(card)
+    if face_cards.include?(card)
+      card_values_as_ints << 10
+    elsif card == "Ace"
+      if ace_count == 0
+        card_values_as_ints << 11
+        ace_count += 1
+      else
+        card_values_as_ints << 1
+      end
+    elsif is_num(card)
+      card_values_as_ints << card.to_i
+    end
   end
   
   card_values_as_ints
@@ -91,6 +100,7 @@ def choose_to_hit_or_stay
   loop do
     valid_options = ["hit", "stay"]
     prompt "Would you like to hit or stay?"
+    prompt "Hit or stay?"
     answer = gets.chomp.downcase
     break if valid_options.include?(answer)
     prompt "That is not a valid option. Try again."
@@ -138,6 +148,15 @@ loop do
     player_cards = hit!(deck, player_cards)
     p player_cards
     see_cards(player_cards, dealer_cards)
+    
+    player_card_values = find_card_values(player_cards)
+    player_cards_to_int = convert_card_values_to_int(player_card_values)
+    player_hand_value = calculate_hand_value(player_cards_to_int)
+    p player_cards_to_int
+    p player_hand_value
+    
+    see_cards(player_cards, dealer_cards)
+    break if bust(player_hand_value)
   else
     break
   end
