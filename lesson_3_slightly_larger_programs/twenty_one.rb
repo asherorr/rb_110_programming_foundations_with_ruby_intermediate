@@ -116,11 +116,11 @@ def hit!(deck, hand)
   hand
 end
 
-def bust(hand_value)
+def bust(hand_value, player)
   busted = false
   
   if hand_value > 21
-    puts "You busted!" 
+    puts "#{player} busted!" 
     busted = true
   end
   
@@ -128,6 +128,18 @@ def bust(hand_value)
 end
 
 def determine_winner(player_hand, dealer_hand)
+  result = player_hand <=> dealer_hand
+  
+  case result
+  when -1
+    winner = "Player"
+  when 0
+    winner = "Tie"
+  when 1
+    winner = "Dealer"
+  end
+  
+  winner
 end
 
 def play_again
@@ -142,18 +154,38 @@ dealer_cards = deal_cards!(deck)
 see_cards(player_cards, dealer_cards)
 
 loop do
-  decision = choose_to_hit_or_stay
-  if decision == "hit"
-    player_cards = hit!(deck, player_cards)
-    see_cards(player_cards, dealer_cards)
-    
-    player_card_values = find_card_values(player_cards)
-    player_cards_to_int = convert_card_values_to_int(player_card_values)
-    player_hand_value = calculate_hand_value(player_cards_to_int)
-    
-    see_cards(player_cards, dealer_cards)
-    break if bust(player_hand_value)
-  else
-    break
+  loop do
+    decision = choose_to_hit_or_stay
+    if decision == "hit"
+      player_cards = hit!(deck, player_cards)
+      player_card_values = find_card_values(player_cards)
+      player_cards_to_int = convert_card_values_to_int(player_card_values)
+      player_hand_value = calculate_hand_value(player_cards_to_int)
+      see_cards(player_cards, dealer_cards)
+      if bust(player_hand_value, "Player")
+        puts "Game is ending now."
+        exit!
+      end
+    else
+      break
+    end
   end
+  puts "-- Dealer's turn --"
+  sleep 1.5
+  loop do
+    dealer_card_values = find_card_values(dealer_cards)
+    dealer_cards_to_int = convert_card_values_to_int(dealer_card_values)
+    dealer_hand_value = calculate_hand_value(dealer_cards_to_int)
+    if dealer_hand_value < 17
+      dealer_cards = hit!(deck, dealer_cards)
+      break if bust(dealer_hand_value, "Dealer")
+    else
+      break
+    end
+  end
+  
+  winner = determine_winner(player_cards, dealer_cards)
+  puts "Winner: #{winner}."
+  break
 end
+
