@@ -42,7 +42,7 @@ end
 
 def see_cards(player_hand, dealer_hand)
   puts "Dealer's cards:"
-  puts joiner(dealer_hand)
+  puts dealer_hand[0].to_s
   puts "--"
   puts "Player's cards:"
   puts joiner(player_hand)
@@ -145,14 +145,11 @@ loop do
   decision = choose_to_hit_or_stay
   if decision == "hit"
     player_cards = hit!(deck, player_cards)
-    p player_cards
     see_cards(player_cards, dealer_cards)
     
     player_card_values = find_card_values(player_cards)
     player_cards_to_int = convert_card_values_to_int(player_card_values)
     player_hand_value = calculate_hand_value(player_cards_to_int)
-    p player_cards_to_int
-    p player_hand_value
     
     see_cards(player_cards, dealer_cards)
     break if bust(player_hand_value)
@@ -160,7 +157,3 @@ loop do
     break
   end
 end
-
-player_card_values = find_card_values(player_cards)
-player_cards_to_int = convert_card_values_to_int(player_card_values)
-player_hand_value = calculate_hand_value(player_cards_to_int)
