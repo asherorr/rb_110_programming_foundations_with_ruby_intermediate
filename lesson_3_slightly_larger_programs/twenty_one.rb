@@ -116,7 +116,7 @@ def hit!(deck, hand)
   hand
 end
 
-def bust(hand_value, player)
+def busted?(hand_value, player)
   busted = false
   
   if hand_value > 21
@@ -143,9 +143,21 @@ def determine_winner(player_hand, dealer_hand)
 end
 
 def play_again
+  valid_options = ["yes", "no"]
+  loop do
+    puts "Would you like to play again?"
+    answer = gets.chomp.downcase
+    if valid_options.include?(answer)
+      break
+    else
+      puts "That is not a valid option. Try again."
+    end
+  end
+  answer
 end
 
 def closing_message
+  puts "The game is closing down now. Goodbye!"
 end
 
 deck = initialize_deck
@@ -162,7 +174,7 @@ loop do
       player_cards_to_int = convert_card_values_to_int(player_card_values)
       player_hand_value = calculate_hand_value(player_cards_to_int)
       see_cards(player_cards, dealer_cards)
-      if bust(player_hand_value, "Player")
+      if busted?(player_hand_value, "Player")
         puts "Game is ending now."
         exit!
       end
@@ -178,7 +190,7 @@ loop do
     dealer_hand_value = calculate_hand_value(dealer_cards_to_int)
     if dealer_hand_value < 17
       dealer_cards = hit!(deck, dealer_cards)
-      break if bust(dealer_hand_value, "Dealer")
+      break if busted?(dealer_hand_value, "Dealer")
     else
       break
     end
