@@ -116,18 +116,17 @@ def hit!(deck, hand)
   hand
 end
 
-def busted?(hand_value, player)
+def busted?(hand_value)
   busted = false
   
   if hand_value > 21
-    puts "#{player} busted!" 
     busted = true
   end
   
   busted
 end
 
-def determine_winner(player_hand, dealer_hand)
+def determine_winner(player_hand, dealer_hand) ## logic needs to be fixed.
   result = player_hand <=> dealer_hand
   
   case result
@@ -142,7 +141,7 @@ def determine_winner(player_hand, dealer_hand)
   winner
 end
 
-def play_again
+def play_again?
   valid_options = ["yes", "no"]
   loop do
     puts "Would you like to play again?"
@@ -160,44 +159,65 @@ def closing_message
   puts "The game is closing down now. Goodbye!"
 end
 
+def player_turn!(deck, hand, dealer_hand)
+  busted = false
+  stay = false
+  
+  until busted || stay
+    decision = choose_to_hit_or_stay
+    stay = true if decision == "stay"
+    hit!(deck, hand) if decision == "hit"
+    see_cards(hand, dealer_hand)
+    player_hand_value = convert_card_values_to_int(find_card_values(hand)).sum
+    busted = true if busted?(player_hand_value)
+  end
+  
+  player_hand_value
+end
+
+def dealer_turn!(deck, hand)
+  busted = false
+  dealer_hand_value = convert_card_values_to_int(find_card_values(hand)).sum
+  
+  until dealer_hand_value > 17 || busted
+    hit!(deck, hand)
+    busted = true if busted?(dealer_hand_value)
+  end
+  
+  dealer_hand_value
+end
+
+
+#--------------------------------#
+
 deck = initialize_deck
 player_cards = deal_cards!(deck)
 dealer_cards = deal_cards!(deck)
 see_cards(player_cards, dealer_cards)
 
-loop do
-  loop do
-    decision = choose_to_hit_or_stay
-    if decision == "hit"
-      player_cards = hit!(deck, player_cards)
-      player_card_values = find_card_values(player_cards)
-      player_cards_to_int = convert_card_values_to_int(player_card_values)
-      player_hand_value = calculate_hand_value(player_cards_to_int)
-      see_cards(player_cards, dealer_cards)
-      if busted?(player_hand_value, "Player")
-        puts "Game is ending now."
-        exit!
-      end
-    else
-      break
-    end
-  end
-  puts "-- Dealer's turn --"
-  sleep 1.5
-  loop do
-    dealer_card_values = find_card_values(dealer_cards)
-    dealer_cards_to_int = convert_card_values_to_int(dealer_card_values)
-    dealer_hand_value = calculate_hand_value(dealer_cards_to_int)
-    if dealer_hand_value < 17
-      dealer_cards = hit!(deck, dealer_cards)
-      break if busted?(dealer_hand_value, "Dealer")
-    else
-      break
-    end
-  end
+winner = []
+
+while winner.empty?
+  player_hand_value = player_turn!(deck, player_cards, dealer_cards)
+  winner.append("Dealer") if busted?(player_hand_value)
+  break if busted?(player_hand_value)
   
-  winner = determine_winner(player_cards, dealer_cards)
-  puts "Winner: #{winner}."
-  break
+  puts "\n-- Dealer's Turn --"
+  sleep 1.5
+  
+  dealer_hand_value = dealer_turn!(deck, dealer_cards)
+  winner.append("Player") if busted?(dealer_hand_value)
+  break if busted?(dealer_hand_value)
+  
+  
+  who_won = determine_winner(player_hand_value, dealer_hand_value)
+  winner.append(who_won)
+end
+
+binding.pry
+if winner[0] == "Tie"
+  put "It's a tie. Nobody won!"
+else
+  puts "The winner is #{winner[0]}."
 end
 
