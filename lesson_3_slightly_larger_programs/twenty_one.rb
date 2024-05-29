@@ -177,9 +177,10 @@ end
 
 def dealer_turn!(deck, hand)
   busted = false
-  dealer_hand_value = convert_card_values_to_int(find_card_values(hand)).sum
+  dealer_hand_value = 0
   
   until dealer_hand_value > 17 || busted
+    dealer_hand_value = convert_card_values_to_int(find_card_values(hand)).sum
     hit!(deck, hand)
     busted = true if busted?(dealer_hand_value)
   end
@@ -218,6 +219,6 @@ binding.pry
 if winner[0] == "Tie"
   put "It's a tie. Nobody won!"
 else
-  puts "The winner is #{winner[0]}."
+  puts "The winner is: #{winner[0]}."
 end
 
