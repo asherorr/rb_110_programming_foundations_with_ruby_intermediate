@@ -1,6 +1,10 @@
 require 'pry'
 
 def welcome_message
+  puts "-- Welcome to Twenty One! --"
+  sleep 1
+  puts "Let's begin!"
+  sleep 1
 end
 
 def initialize_deck
@@ -41,7 +45,7 @@ def joiner(array_obj)
 end
 
 def see_cards(player_hand, dealer_hand)
-  puts "Dealer's cards:"
+  puts "\nDealer's cards:"
   puts dealer_hand[0].to_s
   puts "--"
   puts "Player's cards:"
@@ -131,11 +135,11 @@ def determine_winner(player_hand, dealer_hand) ## logic needs to be fixed.
   
   case result
   when -1
-    winner = "Player"
+    winner = "Dealer"
   when 0
     winner = "Tie"
   when 1
-    winner = "Dealer"
+    winner = "Player"
   end
   
   winner
@@ -191,6 +195,7 @@ end
 
 #--------------------------------#
 
+welcome_message
 deck = initialize_deck
 player_cards = deal_cards!(deck)
 dealer_cards = deal_cards!(deck)
@@ -210,15 +215,16 @@ while winner.empty?
   winner.append("Player") if busted?(dealer_hand_value)
   break if busted?(dealer_hand_value)
   
-  
-  who_won = determine_winner(player_hand_value, dealer_hand_value)
-  winner.append(who_won)
+  if busted?(player_hand_value) == false && busted?(dealer_hand_value) == false
+    who_won = determine_winner(player_hand_value, dealer_hand_value)
+    winner.append(who_won)
+  else
+    break
+  end
 end
 
-binding.pry
 if winner[0] == "Tie"
-  put "It's a tie. Nobody won!"
+  puts "It's a tie. Nobody won!"
 else
   puts "The winner is: #{winner[0]}."
 end
-
