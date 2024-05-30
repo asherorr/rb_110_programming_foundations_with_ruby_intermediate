@@ -1,8 +1,6 @@
 def welcome_message
   puts "Welcome to Twenty One!"
   sleep 1
-  puts "Let's begin!"
-  sleep 1
 end
 
 def initialize_deck
@@ -53,7 +51,7 @@ def find_card_values(hand)
   card_values = []
 
   hand.each do |str_obj|
-    split_obj = str_obj.split(" ")
+    split_obj = str_obj.split
     card_values << split_obj[0]
   end
 
@@ -144,23 +142,6 @@ def determine_winner(player_hand, dealer_hand)
   winner
 end
 
-def play_again?
-  valid_options = ["yes", "no"]
-  answer = ""
-
-  loop do
-    puts "Would you like to play again?"
-    answer = gets.chomp.downcase
-    if valid_options.include?(answer)
-      break
-    else
-      puts "That is not a valid option. Try again."
-    end
-  end
-
-  answer
-end
-
 def player_turn!(deck, hand, dealer_hand)
   busted = false
   stay = false
@@ -191,27 +172,83 @@ def dealer_turn!(deck, hand)
   dealer_hand_value
 end
 
-def closing_message
-  prompt "The game is closing down now. Goodbye!"
+def end_of_round_output(winner, player_cards, player_hand_value, dealer_cards, dealer_hand_value)
+  puts "\nPlayer cards: #{player_cards.join(', ')} || Value: #{player_hand_value}"
+  
+  dealer_hand_value_message = busted?(player_hand_value) ? "Not calculated, because the player busted." : dealer_hand_value.to_s
+  puts "Dealer's cards: #{dealer_cards.join(', ')} || Value: #{dealer_hand_value_message}"
+  puts "\nThe winner is the #{winner.downcase}"
 end
 
-#---- Game Loop ----#
+def display_scores(player_score, dealer_score, round)
+  puts "Round: #{round}"
+  puts "Score: Player: #{player_score} || Dealer: #{dealer_score}"
+end
+
+def update_score!(winner, player_score, dealer_score)
+  if winner == "Player"
+    player_score += 1
+  elsif winner == "Dealer"
+    dealer_score += 1
+  end
+  [player_score, dealer_score]
+end
+
+def check_for_game_winner(player_score, dealer_score)
+  if player_score == 5
+    puts "\nPlayer wins the game with 5 points!"
+    true
+  elsif dealer_score == 5
+    puts "\nDealer wins the game with 5 points!"
+    true
+  else
+    false
+  end
+end
+
+def play_again?
+  valid_options = ["yes", "no"]
+  answer = ""
+
+  loop do
+    puts "Would you like to play again? (enter 'yes' or 'no')."
+    answer = gets.chomp.downcase
+    if valid_options.include?(answer)
+      break
+    else
+      puts "That is not a valid option. Try again."
+    end
+  end
+
+  answer
+end
+
+def closing_message
+  puts "The game is closing down now. Goodbye!"
+end
+
+# -- Main Game Loop -- 
+
+player_score = 0
+dealer_score = 0
+round = 1
 
 loop do
   welcome_message
+  display_scores(player_score, dealer_score, round)
+
   deck = initialize_deck
   player_cards = deal_cards!(deck)
   dealer_cards = deal_cards!(deck)
   see_cards(player_cards, dealer_cards)
 
   winner = nil
-  player_hand_value = 0
-  dealer_hand_value = 0
 
   while winner.nil?
     player_hand_value = player_turn!(deck, player_cards, dealer_cards)
     if busted?(player_hand_value)
       winner = "Dealer"
+      dealer_score += 1
       break
     end
 
@@ -221,31 +258,40 @@ loop do
     dealer_hand_value = dealer_turn!(deck, dealer_cards)
     if busted?(dealer_hand_value)
       winner = "Player"
+      player_score += 1
       break
     end
 
     # Determine the winner if neither busted
     if !busted?(player_hand_value) && !busted?(dealer_hand_value)
       winner = determine_winner(player_hand_value, dealer_hand_value)
+      player_score, dealer_score = update_score!(winner, player_score, dealer_score)
     end
   end
-
-  puts "\n -- WE HAVE A WINNER! --"
+  
+  puts "\n WE HAVE A WINNER!"
+  round += 1
   sleep 1.5
-
+  
   case winner
   when "Tie"
     puts "It's a tie. Nobody won!"
+    
   else
     puts "\nPlayer cards: #{player_cards.join(', ')} || Value: #{player_hand_value}"
+    
     dealer_hand_value_message = if busted?(player_hand_value)
-                                  "not calculated, because the player busted."
+                                  "Not calculated, because the player busted."
                                 else
                                   dealer_hand_value.to_s
                                 end
+    
     puts "Dealer's cards: #{dealer_cards.join(', ')} || Value: #{dealer_hand_value_message}"
     puts "\nThe winner is the #{winner.downcase}."
   end
+
+
+  break if check_for_game_winner(player_score, dealer_score)
 
   play_again_choice = play_again?
   break unless play_again_choice.downcase == "yes"
