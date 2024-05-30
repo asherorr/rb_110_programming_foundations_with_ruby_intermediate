@@ -1,7 +1,6 @@
-require 'pry'
 
 def welcome_message
-  puts "-- Welcome to Twenty One! --"
+  puts "Welcome to Twenty One!"
   sleep 1
   puts "Let's begin!"
   sleep 1
@@ -45,11 +44,10 @@ def joiner(array_obj) #used in see_cards method
 end
 
 def see_cards(player_hand, dealer_hand)
-  puts "\nDealer's cards:"
-  puts dealer_hand[0]
-  puts "--"
+  puts "\nDealer's visible card: #{dealer_hand[0]}"
+  puts "--------------------"
   puts "Player's cards:"
-  puts joiner(player_hand)
+  puts "\n#{joiner(player_hand)}"
 end
 
 def find_card_values(hand)
@@ -63,7 +61,7 @@ def find_card_values(hand)
   card_values
 end
 
-def num?(card)
+def num?(card) #used in convert_card_values_to_int method
   true if Float(card)
 rescue StandardError
   false
@@ -77,7 +75,7 @@ def convert_card_values_to_int(hand)
   hand.each do |card|
     if face_cards.include?(card)
       card_values_as_ints << 10
-    elsif card == "Ace"
+    elsif card == "Ace" #handles updating the value of an ace
       if ace_count == 0
         card_values_as_ints << 11
         ace_count += 1
@@ -164,10 +162,6 @@ def play_again?
   answer
 end
 
-def closing_message
-  puts "The game is closing down now. Goodbye!"
-end
-
 def player_turn!(deck, hand, dealer_hand)
   busted = false
   stay = false
@@ -202,7 +196,7 @@ def closing_message
   prompt "The game is closing down now. Goodbye!"
 end
 
-#--------------------------------#
+#---- Game Loop ----#
 
 loop do
   welcome_message
@@ -211,32 +205,47 @@ loop do
   dealer_cards = deal_cards!(deck)
   see_cards(player_cards, dealer_cards)
   
-  winner = []
-  
-  while winner.empty?
+  winner = nil
+  player_hand_value = 0
+  dealer_hand_value = 0
+
+  while winner.nil?
     player_hand_value = player_turn!(deck, player_cards, dealer_cards)
-    winner.append("Dealer") if busted?(player_hand_value)
-    break if busted?(player_hand_value)
+    if busted?(player_hand_value)
+      winner = "Dealer"
+      break
+    end
   
     puts "\n-- Dealer's Turn --"
     sleep 1.5
   
     dealer_hand_value = dealer_turn!(deck, dealer_cards)
-    winner.append("Player") if busted?(dealer_hand_value)
-    break if busted?(dealer_hand_value)
-  
-    if busted?(player_hand_value) == false && busted?(dealer_hand_value) == false
-      who_won = determine_winner(player_hand_value, dealer_hand_value)
-      winner.append(who_won)
-    else
+    if busted?(dealer_hand_value)
+      winner = "Player"
       break
+    end
+  
+    # Determine the winner if neither busted
+    if !busted?(player_hand_value) && !busted?(dealer_hand_value)
+      winner = determine_winner(player_hand_value, dealer_hand_value)
     end
   end
   
-  if winner[0] == "Tie"
+  puts "\n -- WE HAVE A WINNER! --"
+  sleep 1.5
+  
+  case winner
+  when "Tie"
     puts "It's a tie. Nobody won!"
   else
-    puts "The winner is: #{winner[0]}."
+    puts "\nPlayer cards: #{player_cards.join(', ')} || Value: #{player_hand_value}"
+    if busted?(player_hand_value)
+      dealer_hand_value_message = "not calculated, because the player busted."
+    else
+      dealer_hand_value_message = dealer_hand_value.to_s
+    end
+    puts "Dealer's cards: #{dealer_cards.join(', ')} || Value: #{dealer_hand_value_message}"
+    puts "\nThe winner is the #{winner.downcase}."
   end
   
   play_again_choice = play_again?
