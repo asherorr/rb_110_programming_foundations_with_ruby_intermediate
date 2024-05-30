@@ -1,4 +1,3 @@
-
 def welcome_message
   puts "Welcome to Twenty One!"
   sleep 1
@@ -39,7 +38,7 @@ def deal_cards!(deck)
   player_cards
 end
 
-def joiner(array_obj) #used in see_cards method
+def joiner(array_obj) # used in see_cards method
   array_obj.map(&:to_s).join("\n")
 end
 
@@ -61,7 +60,7 @@ def find_card_values(hand)
   card_values
 end
 
-def num?(card) #used in convert_card_values_to_int method
+def num?(card) # used in convert_card_values_to_int method
   true if Float(card)
 rescue StandardError
   false
@@ -75,7 +74,7 @@ def convert_card_values_to_int(hand)
   hand.each do |card|
     if face_cards.include?(card)
       card_values_as_ints << 10
-    elsif card == "Ace" #handles updating the value of an ace
+    elsif card == "Ace" # handles updating the value of an ace
       if ace_count == 0
         card_values_as_ints << 11
         ace_count += 1
@@ -148,7 +147,7 @@ end
 def play_again?
   valid_options = ["yes", "no"]
   answer = ""
-  
+
   loop do
     puts "Would you like to play again?"
     answer = gets.chomp.downcase
@@ -158,7 +157,7 @@ def play_again?
       puts "That is not a valid option. Try again."
     end
   end
-  
+
   answer
 end
 
@@ -171,7 +170,7 @@ def player_turn!(deck, hand, dealer_hand)
     stay = true if decision == "stay"
     hit!(deck, hand) if decision == "hit"
     see_cards(hand, dealer_hand)
-    
+
     player_hand_value = convert_card_values_to_int(find_card_values(hand)).sum
     busted = true if busted?(player_hand_value)
   end
@@ -204,7 +203,7 @@ loop do
   player_cards = deal_cards!(deck)
   dealer_cards = deal_cards!(deck)
   see_cards(player_cards, dealer_cards)
-  
+
   winner = nil
   player_hand_value = 0
   dealer_hand_value = 0
@@ -215,39 +214,39 @@ loop do
       winner = "Dealer"
       break
     end
-  
+
     puts "\n-- Dealer's Turn --"
     sleep 1.5
-  
+
     dealer_hand_value = dealer_turn!(deck, dealer_cards)
     if busted?(dealer_hand_value)
       winner = "Player"
       break
     end
-  
+
     # Determine the winner if neither busted
     if !busted?(player_hand_value) && !busted?(dealer_hand_value)
       winner = determine_winner(player_hand_value, dealer_hand_value)
     end
   end
-  
+
   puts "\n -- WE HAVE A WINNER! --"
   sleep 1.5
-  
+
   case winner
   when "Tie"
     puts "It's a tie. Nobody won!"
   else
     puts "\nPlayer cards: #{player_cards.join(', ')} || Value: #{player_hand_value}"
-    if busted?(player_hand_value)
-      dealer_hand_value_message = "not calculated, because the player busted."
-    else
-      dealer_hand_value_message = dealer_hand_value.to_s
-    end
+    dealer_hand_value_message = if busted?(player_hand_value)
+                                  "not calculated, because the player busted."
+                                else
+                                  dealer_hand_value.to_s
+                                end
     puts "Dealer's cards: #{dealer_cards.join(', ')} || Value: #{dealer_hand_value_message}"
     puts "\nThe winner is the #{winner.downcase}."
   end
-  
+
   play_again_choice = play_again?
   break unless play_again_choice.downcase == "yes"
 end
