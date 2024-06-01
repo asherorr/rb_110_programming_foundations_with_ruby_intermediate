@@ -44,7 +44,7 @@ def see_cards(player_hand, dealer_hand)
   puts "\nDealer's visible card: #{dealer_hand[0]}"
   puts "--------------------"
   puts "Player's cards:"
-  puts "\n#{joiner(player_hand)}"
+  puts "#{joiner(player_hand)}"
 end
 
 def find_card_values(hand)
@@ -269,7 +269,7 @@ loop do
     end
   end
   
-  puts "\n WE HAVE A WINNER!"
+  puts "\nWE HAVE A WINNER!"
   round += 1
   sleep 1.5
   
