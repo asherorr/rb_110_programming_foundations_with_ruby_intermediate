@@ -264,16 +264,7 @@ loop do
     puts "It's a tie. Nobody won!"
     
   else
-    puts "\nPlayer cards: #{player_cards.join(', ')} || Value: #{player_hand_value}"
-    
-    dealer_hand_value_message = if busted?(player_hand_value)
-                                  "Not calculated, because the player busted."
-                                else
-                                  dealer_hand_value.to_s
-                                end
-    
-    puts "Dealer's cards: #{dealer_cards.join(', ')} || Value: #{dealer_hand_value_message}"
-    puts "\nThe winner is the #{winner.downcase}."
+    end_of_round_output(winner, player_cards, player_hand_value, dealer_cards, dealer_hand_value)
   end
 
 
