@@ -158,9 +158,10 @@ def dealer_turn!(deck, hand)
   dealer_hand_value
 end
 
-def end_of_round_output(winner, player_cards, player_hand_value, dealer_cards, dealer_hand_value)
+def end_of_round_output(winner, player_cards, player_hand_value, dealer_cards,
+                        dealer_hand_value)
   puts "\nPlayer cards: #{player_cards.join(', ')} || Value: #{player_hand_value}"
-  
+
   dealer_hand_value_message = busted?(player_hand_value) ? "Not calculated, because the player busted." : dealer_hand_value.to_s
   puts "Dealer's cards: #{dealer_cards.join(', ')} || Value: #{dealer_hand_value_message}"
   puts "\nThe winner is the #{winner.downcase}"
@@ -213,7 +214,7 @@ def closing_message
   puts "The game is closing down now. Goodbye!"
 end
 
-# -- Main Game Loop -- 
+# -- Main Game Loop --
 
 player_score = 0
 dealer_score = 0
@@ -251,22 +252,23 @@ loop do
     # Determine the winner if neither busted
     if !busted?(player_hand_value) && !busted?(dealer_hand_value)
       winner = determine_winner(player_hand_value, dealer_hand_value)
-      player_score, dealer_score = update_score!(winner, player_score, dealer_score)
+      player_score, dealer_score = update_score!(winner, player_score,
+                                                 dealer_score)
     end
   end
-  
+
   puts "\nWE HAVE A WINNER!"
   round += 1
   sleep 1.5
-  
+
   case winner
   when "Tie"
     puts "It's a tie. Nobody won!"
-    
-  else
-    end_of_round_output(winner, player_cards, player_hand_value, dealer_cards, dealer_hand_value)
-  end
 
+  else
+    end_of_round_output(winner, player_cards, player_hand_value, dealer_cards,
+                        dealer_hand_value)
+  end
 
   break if check_for_game_winner(player_score, dealer_score)
 
