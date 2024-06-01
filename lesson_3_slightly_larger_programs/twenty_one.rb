@@ -1,15 +1,18 @@
+TARGET_SCORE = 21
+DEALER_HIT_THRESHOLD = 17
+
 def welcome_message
-  puts "Welcome to Twenty One!"
+  puts "Welcome to #{TARGET_SCORE}!"
   sleep 1
 end
 
 def initialize_deck
   cards_in_suite = ["Ace", 2, 3, 4, 5, 6, 7, 8, 9, 10, "Jack", "Queen", "King"]
   suites = {
-    "♠" => cards_in_suite,
-    "♣" => cards_in_suite,
-    "♥" => cards_in_suite,
-    "♦︎" => cards_in_suite
+    "♠" => cards_in_suite.dup,
+    "♣" => cards_in_suite.dup,
+    "♥" => cards_in_suite.dup,
+    "♦︎" => cards_in_suite.dup
   }
 
   deck = []
@@ -22,18 +25,7 @@ def initialize_deck
 end
 
 def deal_cards!(deck)
-  player_cards = []
-
-  loop do
-    break if deck.empty? || player_cards.size == 2
-
-    card = deck.sample
-    card_index = deck.index(card)
-    player_cards << card
-    deck.delete_at(card_index)
-  end
-
-  player_cards
+  deck.sample(2).tap { |cards| deck -= cards }
 end
 
 def joiner(array_obj) # used in see_cards method
@@ -118,13 +110,7 @@ def hit!(deck, hand)
 end
 
 def busted?(hand_value)
-  busted = false
-
-  if hand_value > 21
-    busted = true
-  end
-
-  busted
+  hand_value > TARGET_SCORE
 end
 
 def determine_winner(player_hand, dealer_hand)
@@ -163,7 +149,7 @@ def dealer_turn!(deck, hand)
   busted = false
   dealer_hand_value = 0
 
-  until dealer_hand_value > 17 || busted
+  until dealer_hand_value >= DEALER_HIT_THRESHOLD || busted
     dealer_hand_value = convert_card_values_to_int(find_card_values(hand)).sum
     hit!(deck, hand)
     busted = true if busted?(dealer_hand_value)
