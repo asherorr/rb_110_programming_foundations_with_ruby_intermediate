@@ -29,10 +29,16 @@ def num_chars
   answer = gets.chomp
   
   arr = answer.split("")
-  # arr.delete(" ")
+  arr.delete(" ")
   num_chars = arr.size
   
   puts "There are #{num_chars} characters in #{answer}."
 end
 
 num_chars
+
+#second solution
+# print 'Please write word or multiple words: '
+# input = gets.chomp
+# number_of_characters = input.delete(' ').size
+# puts "There are #{number_of_characters} characters in \"#{input}\"."
