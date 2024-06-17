@@ -36,7 +36,7 @@ require 'pry'
 #if `choice` == p
 #invoke inject method on the range with * symbol
 
-def sum_of
+def sum_or_product_of
   puts "Please enter an integer greater than 0:"
   int_obj = gets.chomp.to_i
   puts "Enter 's' to compute the sum, 'p' to compute the product."
@@ -51,4 +51,4 @@ def sum_of
   end
 end
 
-sum_of
+sum_or_product_of
