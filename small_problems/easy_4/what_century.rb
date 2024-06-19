@@ -22,8 +22,8 @@
 #integer objects
 
 #Algorithm
-#create a hash with keys representing the cenury, and values representing the year (as a range)
-#if the arg is in the range representing the years (in the hash), return the key.
+#mathematically determine the century from the year
+#subtract the year by 1, then divide this number by 100 + 1
 
 #Code
 
