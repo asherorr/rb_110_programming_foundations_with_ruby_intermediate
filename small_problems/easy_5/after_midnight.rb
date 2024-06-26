@@ -24,21 +24,54 @@
 #integer object input, string object output
 
 #Algorithm
-#initialize var `hour`
-#initialize var `minute`
-#initialize var `result` to "00:00"
-
-#if arg > 1440 divide hour by 24
-#arg calls divmod method with 60 passed in. returns hour, minute.
-#store hour in `hour` and minute in `minute
-#initialize var `result` with `hour` and `minute` interpolated
-#return result
-
-#if arg is less than -1440 (more than 1 full day backwards)
-#1440 minutes is a 24-hour period
-#calculate equivalent positive minutes using modulo
-#add 1440 to result until we get positive num within range of 0 to 1439
-#convert that number to hours and minutes
+# def time_of_day(arg)
+#   if arg < -1440
+#     # Calculate the equivalent positive minutes using modulo
+#     remainder = arg % 1440
+#     # Convert `remainder` to hours and minutes
+#     hour, minute = remainder.divmod(60)
+#     # Format hours and minutes to ensure two digits
+#     hour = "0#{hour}" if hour < 10
+#     minute = "0#{minute}" if minute < 10
+#     # Construct the result string
+#     result = "#{hour}:#{minute}"
+    
+#   elsif arg < 0
+#     # Adjust to positive equivalent within a day by adding 1440
+#     arg += 1440
+#     # Convert to hours and minutes
+#     hour, minute = arg.divmod(60)
+#     # Adjust the hour for the 24-hour format
+#     hour = 24 + hour
+#     # Format hours and minutes to ensure two digits
+#     hour = "0#{hour}" if hour < 10
+#     minute = "0#{minute}" if minute < 10
+#     # Construct the result string
+#     result = "#{hour}:#{minute}"
+    
+#   elsif arg > 1440
+#     # Calculate the equivalent positive minutes using modulo
+#     arg = arg % 1440
+#     # Convert to hours and minutes
+#     hour, minute = arg.divmod(60)
+#     # Format hours and minutes to ensure two digits
+#     hour = "0#{hour}" if hour < 10
+#     minute = "0#{minute}" if minute < 10
+#     # Construct the result string
+#     result = "#{hour}:#{minute}"
+    
+#   else
+#     # Convert to hours and minutes
+#     hour, minute = arg.divmod(60)
+#     # Format hours and minutes to ensure two digits
+#     hour = "0#{hour}" if hour < 10
+#     minute = "0#{minute}" if minute < 10
+#     # Construct the result string
+#     result = "#{hour}:#{minute}"
+#   end
+  
+#   result
+# end
 
 def time_of_day(arg)
   if arg < -1440
