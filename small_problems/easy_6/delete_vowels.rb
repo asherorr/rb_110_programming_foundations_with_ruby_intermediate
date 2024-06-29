@@ -20,7 +20,9 @@
 
 #Code
 def remove_vowels(arg)
-  arg.map! {|str| str.delete("aeiou")}
+  arg.map! {|str| str.delete("aeiouAEIOU")}
 end
 
-p remove_vowels(%w(abcdefghijklmnopqrstuvwxyz))
+p remove_vowels(%w(abcdefghijklmnopqrstuvwxyz)) == %w(bcdfghjklmnpqrstvwxyz)
+p remove_vowels(%w(green YELLOW black white)) == %w(grn YLLW blck wht)
+p remove_vowels(%w(ABC AEIOU XYZ)) == ['BC', '', 'XYZ']
