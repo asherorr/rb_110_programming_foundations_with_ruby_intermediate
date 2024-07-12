@@ -36,9 +36,10 @@
 #initialize var `str` to ""
 #initialize var `final_arr` to []
 
-#loop through each char in the arg and update str accordingly
-#check if `str` is a palindrome and if the length of string is greater than 1
-#if it is, append str to final_arr
+#call substrings on arg
+#check if each substring in the array is a palindrome
+#if it is, add it to final_arr
+#if not, next
 #return final_arr
 
 #Code
@@ -75,13 +76,11 @@ def palindrome?(str1)
 end
 
 def palindromes(arg)
-  str = ""
   final_arr = []
-  
-  arg.each_char do |letter|
-    str += letter
-    if palindrome?(str) == true && str.length > 1
-      final_arr += substrings(arg)
+  result = substrings(arg)
+  result.each do |ele|
+    if palindrome?(ele) == true && ele.size > 1
+      final_arr << ele
     else
       next
     end
@@ -89,7 +88,7 @@ def palindromes(arg)
   
   p final_arr
 end
-
+  
 p palindromes('abcd') == []
 p palindromes('madam') == ['madam', 'ada']
 p palindromes('hello-madam-did-madam-goodbye') == [
